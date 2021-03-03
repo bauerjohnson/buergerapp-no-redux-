@@ -1,0 +1,2421 @@
+125 n 126=> layout.js, app.js
+
+in layout
+
+ const layout = (props) => (
+    <Aux>
+    <div> toolbar, sidedrawer, backdrop</div>
+    <main>{props.children}</main>
+    </Aux>
+)
+
+in app.js
+return (
+    <layout>
+    <burgerbuider/>
+   </layout>
+)
+
+in bb.js we create a class base component
+
+return (
+    <Aux>
+    <div>burger</div>
+    <div>buildcontrol</div>
+    </Aux>
+)
+
+127 
+
+129 => burger.js and burger.css
+
+in burger.js
+
+import burger from 
+const burger = () => {
+    return (
+        <div>
+        <burgeringre type = 'bread-top'/>
+        <burgeringre type = 'cheese'/>
+        <burgeringre  type = 'meat'/>
+        <burgeringre  type = 'bread-bottom'/>
+        </div>
+    )
+}
+
+
+130 => bb.js,burger.js
+
+ how to transform object into an array
+//burgerbuider n burger.js
+in burgerbuider.js
+
+state = {
+    ingredient = {
+        salad : 1,
+        meat : 1,
+        cheese : 1
+        bacon : 2
+    }
+}
+
+<burger ingredients = {this.state.ingredients}/>
+
+in burger.js
+we want to transform an object into an array so that the 
+state in burgerbuilder works
+
+const trasnformingre = Object.key(props.ingredients)
+.map(igkey => {
+    return [...array(props.ingredients[igkey])]
+    .map((_, i) => {
+        return <burgeringre key = {igkey + i} type = {igkey}/>
+    })
+})
+
+ <burgeringre type = 'bread-top'/>
+        {trasnformingre}
+        <burgeringre  type = 'bread-bottom'/>
+
+
+131 => calc ingre dynamically
+       we want to pull out array in our trasnformingrea and create one array
+      so as to check the length of our and know how many array we have ,we will now flatten in into
+      using reduce
+       burger.js, burgerbuider.js
+      let trasnformingre = Object.key(props.ingredients)
+      .map(igkey => {
+          return [...array(props.ingredients[igkey])]
+          .map((_, i) => {
+              return <burgeringre key = {igkey + i} type = {igkey}/>
+          })
+      })
+      .reduce((arr, el) => {
+       return arr.concat(el)
+      }, [])
+
+      if(trasnformingre.length === 0) {
+          trasnformingre = <p>pls add ingredient</p>
+      }
+    in bb.js 
+    all ingredient in state should now be 0
+
+      132  n 133=> buildcontrols.js, buildcontrols.css, buildcontrol.js, buildcontrol.css
+
+      buildcontrol
+
+      <div>
+      <div class = ".labels">{props.label}</div>
+      <button class = ".button.more">less</button>
+      <button class = "button.more">more</button>
+      
+      </div>
+
+      buildcontrols
+
+      const control = [
+          {label : salad, type : salad}
+          {label : salad, type : salad}
+          {label : salad, type : salad}
+          {label : salad, type : salad}
+          {label : salad, type : salad}
+      ];
+
+cosnt buildcontrols = (props) => (
+    {control.map(ctrl => {
+        <buildcontrol key = {ctrl.label} label = {ctrl.label}/>
+    })}
+)
+
+
+134 => bb.js, buildcontrols.js
+
+connecting state to buildcontrol
+we want to create an handler for both adding ingredient and remove ingredient
+
+outside our const burgerbuider
+
+outside our code 
+
+const INGREDIENT_PRICE = {
+  salad : 0.5,
+  cheese : 0.3,
+  meat : 0.6
+  pie : 0.2
+}
+
+inside 
+
+state = {
+    ingredients : {
+        salad : 0,
+        cheese : 0,
+        meat : 0,
+        pie : 0
+    }
+   totalprice : 5
+}
+
+
+addingredienthandler = () => {
+    const oldcount = this.state.ingredients[type]
+    const updatedcount = oldcount + 1;
+    const updatedingredient = {
+        ...this.state.ingredients
+    }
+    updatedingredient[type] : updatedcount
+    const priceAddition = INGREDIENT_PRICE[type];
+    const oldprice = this.state.totalprice
+    const newprice = priceAddition + oldprice
+    this.setstate({totalprice : newprice, ingredients : updatedingredient})
+}
+
+<buidcontrols ingredientadded = {this.addingredienthandler}/>
+
+in buildcontrols 
+
+<buildcontrol 
+   key = {ctrl.label}
+   label = {ctrl.label}
+   added = {() => this.ingredientadded(ctrl.type)}/>
+
+<button>onClick = {props.added}<button/>
+135 => bb.js, buildcontrols.js, buildcontrol.js
+
+for deduction
+removeingredienthandler = (type) => {
+const oldcount = this.state.ingredients[type];
+if(oldcount <= 0) {
+    return;
+}
+const updatedcount = oldcount - 1;
+const updatedingredient = {
+    ...this.state.ingredients
+}
+updatedingredient[type] : updatedcount;
+const pricededuction = INGREDIENT_PRICE[type]
+const oldprice = this.state.totalprice;
+const newprice = oldprice-pricededuction;
+this.setstate({ingredients : updatedingredient, totalprice : newprice})
+
+another way to disable a onClick
+
+render () {
+
+const disableinfo = {
+    ...this.state.ingredients
+}
+
+for (let key in disableinfo) {          //this will loop through all the keys in disableinfo
+    disableinfo[key] = disableinfo[key] <= 0 
+}
+then we pass it to buidcontrols
+
+<buidcontrols disabled = {disableinfo}/>
+
+in buidcontrols.js
+
+<buildcontrol disabled = {props.disabled[ctrl.type]}/>
+
+then in buildcontrol.js
+on the less button
+
+disabled = {props.disabled}
+
+136 =>the price
+
+buildcontrols.js, bb.js
+
+to fix the price 
+
+in buildcontrols , 
+
+<p>current price : <strong>{props.price.toFixed(2)}<strong/><p/>
+
+in burgerbuider, buidcontrols
+
+
+<buildcontrols price = {this.state.totalprice}/>
+
+
+137 => addidng the order button
+buildcontrols.js,buildcontrols.css(order button styles)
+
+in buildcontrols.js
+
+<button>order now</button>
+
+we need to deactivate the button until an item is added
+
+in state 
+
+purchaseable : false
+
+updatepurchasestate (ingredients) {
+   const sum = Object.key(ingredients)
+   .map(igkey => {
+       return ingredients[igkeys]
+   })
+   .reduce((sum, el) => {
+      return sum + el
+   },0)
+}
+this.setstate({purchaseable : sum > 0})
+
+we turn our array to a single number here so the order button will know wen to be activated
+
+in buildcontrols(app.js)
+
+<buildcontrols purchasable = {this.state.purchaseable}/>
+
+
+in buildcontrols.js
+
+<button class = "orderbutton"
+  disabled = {!props.purchasable}>ORDER<button/>
+
+  the disabled use is tapping from the props of buildcontol.js disabled
+
+  then we pass our updatepurchasestate to our addingredienthandler and removeingredienthandler 
+
+  this.updatepurchasestate(ingredients)
+
+
+138 =>creating the ordersummary modal
+ modal.js, modal.css, ordersummary.js,bb.js
+we create a UI folder with modal.js, backdrop.js in
+ our component
+
+in modal.js 
+
+const modal = (props) => (
+    <div class = 'modal'>
+    {props.children}
+    </div>
+)
+
+we create another ordersummary.js in our component
+where we transform our ingredient from object to array
+
+const ordersummary = (props) => {
+ const ingredientsummary = Object.key(props.ingredients)
+ .map(igkey => {
+     return 
+     <li key = {igkey}>
+     <span style = {{texttransform : 'capitalize'}}>{igkey}</span> : {props.ingredient}[igkey]
+     </li>
+ })
+
+return (
+    <Aux>
+    <h3>your order</h3>
+    <p>a delicious burger with the following ingredient:</p>
+    <ul>
+    {ingredientsummary}
+    </ul>
+    <p>continue to checkout
+    </Aux>
+)
+}
+
+
+in bb.js
+ return (
+     <modal>
+     <ordersummary ingredients = {this.state.ingredient}/>
+     </modal>
+ )
+
+139 => showing and hiding modal(with animation)
+     bb.js,buidcontrols.js modal.js
+in state 
+
+purchasing : false
+
+purchasehandler = () => {
+    this.setstate({purchasing : true})
+
+}
+
+
+in bb.js
+
+<modal show = {this.state.purchasing}>
+<ordersummary/>
+</modal>
+
+still in bb.js
+
+<buidcontrols  ordered = {this.purchasehandler}/>
+
+in buidcontrols.js
+
+<button onClick = {props.ordered}>ORDER NOW</button>
+
+but this wont do it 
+
+
+in our modal.js
+<div props.show ? 'translateY(0)'  : 'translateY(-100vh)';>
+  {props.children}
+</div>
+
+
+ 
+140 implememnting the backdrop component
+backdrop.js, backdrop.css,modal.js, bb.js
+
+bb.js
+purchasecancelhandler = () => {
+    this.setstate({purchasing : false})
+}
+<modal show = {this.state.purchasing} modalClosed = {this.purchascancelehandler}
+
+in modal.js
+ 
+we import the backdrop.js here and aux
+
+const modal = () => {
+    <Aux>
+<backdrop show = {props.show} clicked = {props.modalClosed}/>
+
+the show = {props.show} is still the same with the one in the modal.js,
+it is dis way so that wen the modal show , the backdrop show too
+
+
+<div
+    </Aux>
+}
+
+in the backdrop.js
+import classes from './backdrop.css'
+const backdrop = (props) => (
+  
+props.show ? <div>className = {classes.backdrop} onClick = {props.clicked}</div> : null
+
+)
+
+in the modal.css 
+.backdrop {
+    z-index : 100;
+    top : 0;
+    left : 0;
+    position : fixed;
+    width : 100%;
+    height : 100%;
+    background-color : rgba(0, 0, 0, .5)
+}
+
+since we want the backdrop to show wen the modal show
+
+
+
+
+
+
+141 => buttons
+ordersummary.js, UI > button.js, button.css
+
+in ordersummary.js
+<p>continue to checkout</p>
+<button>CANCEL</button>
+<button>CONTINUE</button>
+
+in button.js
+
+const button = (props) => (
+    <button
+    className = {[classes.Button, classes[props.btnType]].join(' ')}>
+    onClick = {props.clicked}>{props.children}</button>
+    </button>
+);
+
+ 
+142 => implememnting the button component
+   ordersummary.js, bb.js
+
+   in ordersummary 
+
+   import button from...button
+
+     <p>continue to checkout</p>
+     <Button btnType = 'Danger' clicked = {props.purcheasecancelled}>CANCEL</Button>
+     <Button btnType = 'success' clicked = {props.purchasecontinued} >continue</Button>
+
+in bb.js
+
+purchasecontinuehandler = () => {
+    alert('you continue!') 
+}
+
+
+<ordersummary purcheasecancelled = {this.purchaseCancelhandler} (already have purchaseCancelhandler)
+              purchasecontinued = {this.purchasecontinuehandler}         />
+
+ 
+
+
+
+
+143 => ordersummary price
+ordersummary.js, bb.js
+
+in ordersummary .js
+in order to add the price to our ordersummary
+
+<p><strong>Total price : {props.price}</strong></p>
+
+in bb.js
+<ordersummary price = {this.state.totalprice}/>
+
+
+144 => adding toolbar
+toolbar.js . toolbar.css, layout.js, bb.js
+navigation > toolbar F >  toolbar.js
+
+in toolbar.js
+const toolbar = (props) => (
+    <header>
+    <div>MENU</div>
+    <div>LOGO</div>
+    <nav>
+    ...
+    </nav>
+    </header>
+)
+
+layout.js
+
+import toolbar from ...toolbar
+
+<div>Toobar, sidedrawer, backdrop</div>
+we will now replace this up with
+<toolbar/>
+<main class = 'content'>
+{props.children}
+</main>
+
+
+145 => logo in app
+
+assets > images > burgerlogo.png, logo.js,logo.css, toolbar.js
+
+in logo.js
+
+import bergerlogo from ...assets/images/burgerlogo.png
+
+const logo = (props) => (
+    <div>
+    <img src = {burgerlogo} alt = 'myburger' />
+    </div>
+)
+
+in burgerlogo.css
+
+logo {
+    background-color : white;
+    padding : 8px;
+    height : 80%;
+    box-sizing : border-box;
+    border-radius : 5px;
+}
+
+.Logo img {
+    height : 100%;
+}
+
+in toolbar .js
+we import our logo here
+we change <div>LOGO</div> to <logo/>
+
+
+146 => reusable nav item
+navigationitems.js, navigationitems.css, 
+navigationitem.js, navigationitem.css,
+toolbar.js
+
+navigation F> navigationitems.js
+
+const navigationitems = () => (
+    <ul class = 'navigationitems'>
+     <navigationitem link = '/'>burgerbuider</navigationitem>
+     <navigationitem link '/'>checkout</navigationitem>
+    </ul>
+)
+
+navigationitems.css (this styles how it looks in our UI)
+
+.navigationitems {
+    margin : 0;
+    padding : 0;
+    list-style : none;
+    display : flex;
+    align-items : center;
+    height : 100%;
+}
+
+navigationitem.js
+const navigationitem = (props) => (
+    <li class = 'navigationitem'>
+    <a href = {props.link}
+     className = {props.active ? classes.active : null}>
+     {props.children}</a>
+    </li>
+    
+)
+
+.navigationitem {  (this styles how the link tag itself really look)
+
+}
+
+in toolbar.js
+import navigationitems from ...navigation
+
+<nav>
+<navigationitems/>
+</nav>
+
+
+147 => responsive sidedrawer
+sidedrawer.js, sidedrawer.css,layout.js
+
+
+in the sidedrawer.js
+
+import Logo from ..logo
+import navigationitem from .../navigationitem
+import classes from sidedrawer
+
+const sidedrawer = () => {
+    //...
+    return (
+        <div className = {classes.sidedrawer}>
+            <logo/>
+            <nav>
+            <navigationitems/>
+            </nav>
+        </div>
+
+    )
+}
+in sidedrawer.css
+.sidedrawer {
+    position: fixed;
+    max-width: 70%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 200;
+    background-color: white;
+    padding: 32px 16px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease-out;
+}
+
+@media (min-width : 500px) {
+    .sidedrawer {
+        display: none;
+    }
+}
+
+.open {
+    transform: translateX(0);
+}
+
+.close {
+    transform: translateX(-100%);
+}
+
+.logo {
+    height : 11%;
+}
+
+in layout.js
+
+import sidedrawer from .../sidedrawer
+
+<toolbar/>
+<sidedrawer/>
+
+148 => working on responsive adjustment
+we want to adjust the height of logo to look good in sidedrawer ,
+but then we jst set it to default in logo.css(height : 100%)
+
+toolbar.js,logo.js,sidedrawer.js
+
+in toolbar.js
+<logo height= '80%'/>
+
+we accept it in logo.js
+in logo.js
+<div className = {classes.Logo} style = {{height : props.height}}>
+
+in sidedrawer.js
+<Logo height = '11%'/>
+
+alternate approach is to wrap logo with div in sidedrawer and toolbar
+and set it to a class related to sidedrawer.css
+
+148 > 149 more about adjustment
+ note : @media(min-width : 500px) is desktop
+
+ navigationitem.css, navigationitem.css, sidedrawer.css,toolbar.css
+toolbar.js
+ in navigationitem.css
+
+ we create a media query and adjust our css
+
+ in the sidedrawer.css, we adjust the logo to shift a bit from
+ the navigation, by giving it a margin-bottom
+
+ in the toolbar.css 
+ we dont want our nav to show in mobile size
+
+ @(max-width : 499px) {
+     .Desktoponly{
+         display : none;
+     }
+ }
+
+ then in the toolbar.js
+ <nav className = {classes.Desktoponly}>
+   <navigationitems/>
+</nav>
+
+149 => reusing the backdrop
+sidedrawer.js, layout.js, backdrop.js - n
+
+in sidedrawer.js
+
+import backdrop from '../back'
+we then import aux in here too
+
+<Aux>
+<backdrop show/>
+
+in layout.js
+we then convert it to class base
+
+state = {
+    showsidedrawer : true
+}
+
+sidedrawerclosehandler = () => {
+    this.setstate({showsidedrawer : false})
+}
+
+<sidedrawer closed = {this.sidedrawerclosehandler}/>
+
+in sidedrawer.js
+
+<backdrop show = {props.open} clicked = {props.closed}/>
+
+in layout
+
+<sidedrawer open = {this.state.showsidedrawer}
+             closed = {this.state.showsidedrawer}/>
+
+in sidedrawer.js
+
+const sidedrawer = (props) = {
+    let attachclasses = [classes.SideDrawer, classes.close];
+    if(props.open) {
+        attachclasses = [classes.SideDrawer, classes.open]
+    }
+}
+
+we then change our <div className = {classes.Sidedrawer}>
+      to
+<div className = {attachclasses.join(' ')}>
+
+
+150 => adding a sidedrawer toggle
+
+drawertoggler F > drawertoggler.js,toolbar.js,layout.js
+
+in drawertoggle.js
+
+const drawertoggler = (props) => (
+    <div onClick = {props.clicked}>MENU</div>
+)
+
+in toolbar.js
+import drawertoggle from 
+
+<drawertoggler clicked = {props.drawertogglerclicked} />
+
+in layout.js
+
+sidedrawertogglehandler = () => {
+    this.setstate ({showsidedrawer : !this.state.showsidedrawer})
+}
+
+dont do this, it has a flaw, due to the asnycronous nature
+of setstate , this may led to unexpected outcome
+
+sidedrawertogglehandler = () => {
+    this.setstate ( (prevState )  => {
+        return {showsidedrawer : !prevState.showsidedrawer}
+    })
+}
+
+this is what we do instead wen we depend on an old state
+
+still in layout.js
+<toolbar drawertogglerclicked = {this.sidedrawertogglehandler}/>
+
+was thinking maybe SideDrawer.js is suppose to be involve through
+jst my thought
+
+151 => adding the hamburger icon
+drawertoggle.css - new, drawetoggle.js
+
+in drawertoggle.js
+ we remove the menu and jst use
+<div onClick = {props.clicked}>
+ <div></div>
+ <div></div>
+ <div></div>
+ </div>
+
+ in drawertoggle.css
+ we ave styles that gives us 3 dashes
+
+
+154 =>  improving the performance
+ordersummary.js, modal.js
+
+in our ordersumary .js
+we transform it into a class base component
+we use a lifecycle componentwillupdate or componentdidupdate
+
+ componentDidUpdate() {
+    console.log('[ordersummary] willupdate')
+}
+
+in our U.I , when we add ingre, componentwillupdate fires up,
+which is bad because its an unnecessary render
+
+in modal.js
+we trasnform to class base
+
+shouldComponentUpdate (nextProps, nextState ) {
+    return nextProps.show !== this.props.show;
+}
+
+componentDidUpdate() {
+    console.log('[modal] willupdate')
+}
+
+we ave now improve our performance
+we lick the order button now before our life cycle fire up
+(no unnecessary update or render)
+
+so now the wrapping element controls the inside element
+
+160 => understanding http request in react
+
+if a react app sends an html to the server, its get json data 
+back as response
+
+161 => understanding our project and introducing axios
+
+we ave the option of using XML http request or third party app
+called axios
+
+177 => module intro
+
+using firebase
+
+178 => firebase and the right database
+
+179 => creating the firebase project
+
+here we jst create a project and we create a real-time database
+in firebase.com
+
+180 => creating the axios instance
+npm install --save axios 
+
+new - axios-orders.js file
+
+import axios from 'axios';
+
+const instance = axios.create({
+    baseURL : 'paste here the link from realtime firebase'
+})
+
+export default instance; 
+
+
+181 => sending a POST request 
+
+
+in bb.js
+import axios from '../axios-order'
+
+purchasecontinuehandler = () => {
+//alert('you continue!');
+const order = {
+    ingredient : this.state.ingredients,
+    price : this.state/totalprice,
+    customer : {
+        name : 'jerry johnson',
+        address : {
+            street : 'teststreet 1',
+            zipcode : '41351',
+            country : 'nigeria'
+        },
+ email : 'test@gmail.com'
+
+    }, 
+    deliverymethod : 'fatest'
+}
+    axios.post('/orders.json')//the node name is anyname of ur choice i.e order.json
+    .then(response => console.log(response))
+    .catch(error => console.log(error))
+}
+
+182 => displaying a spinner while sending request
+new-spinner.js, spinner.css, bb.js, modal.js
+
+UI => spinner F => spinner.js
+on the web = search 'css spinners' => single element css spinners,
+copy css code for spinner and paste in spinner.css
+
+make loader in css capital L
+
+grab html code from spinner 
+in spinner.js
+const spinner = () => (
+    'paste html from spinner site here'
+)
+
+in bb.js
+
+import spinner from '../'
+
+state = {
+    loading : false
+}
+
+purchasecontinuehandler = () => {
+
+    this.setState = ({loading : true})
+    const order = {
+        ...
+
+        .then(response => {
+            this.setState = ({loading : false, purchasing : false }) 
+        })
+        .catch(error => {
+            this.setState = ({loading : false, purchasing : false})
+            //purchasing is set to false so as to close the modal
+        })
+    }
+}
+
+in the render method 
+let ordersummary = <OrderSummary 
+                  ingredients = {this.state.ingredients}
+                  purchasecancel = {this.purchasecancelhandler}
+                   purchasecontinue = {this.purchaseContinuehandler}
+                   price = {this.state.totalprice}/>
+                   if(this.state.loading) {
+                       ordersummary = <spinner/>;
+                   }
+
+                   return (
+                       <Aux>
+                       <Modal show = {this.state.purchasing}
+                        modalclosed = {this.purchasecancelhandler}>
+                        {ordersummary}
+                        </Modal>
+                   )
+
+in modal.js
+
+shouldComponentUpdate (nextProps, nextState) {
+    return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
+}
+
+183 => error handling
+withErrorhandler.js, bb.js
+
+
+new = withErrorhandler, withErrorhandler.js
+
+const withErrorhandler = (WrappedComponent) => {
+    return (props) => {
+        return (
+            <Aux>
+            <Modal show>
+            Something went wrong
+            </Modal>
+            <WrappedComponent {...props} />
+            </Aux>
+        )
+    }
+      
+}
+
+becos we want to use a lifecycle, we transform this to
+a class base
+
+const withErrorhandler = (WrappedComponent, axios) => {
+    return class extends Component {
+        state = {
+            error : null
+        }
+
+        componentDidMount () {
+            axios.interceptors.request.use(req => {
+                this.setState({error : null});
+                return req
+            })
+            axios.interceptor.response.use(res => res, error => {
+                this.setState({error : error});
+            })
+        }
+
+        errorconfirmhandler =  () => {
+            this.setState({error : null})
+        }
+        render () {
+            return (
+                <Aux>
+                <Modal 
+                show = {this.state.error}
+                 modalClosed = {this.errorconfirmhandler}>  //for removing modal
+                 {this.state.error ? this.state.error.message : null} //only if there is error message else do nothing
+                {this.state.error.message}
+        // Something went wrong
+                </Modal>
+                <WrappedComponent {...this.props} />
+                </Aux>
+            )
+        }
+   
+    }
+      
+}
+
+in bb.js
+import withErrorhandler from './'
+
+export default withErrorhandler(burgerbuider, axios)
+
+184 => receiving data from the backend
+
+firebase.io, bb.js, withErrorhandler.js
+
+in firebase , realtime firebase
+
++ingredients
+ salad : 0
+ bacon : 0
+ butter : 0
+ meat : 
+ 
+ in bb.js
+
+ state = {
+     ingredients : null  //change to null
+     error : false
+ }
+
+
+ componentDidMount () {
+     axios.get('https://react-my-burger-a1064-default-rtdb.firebaseio.com.json') //.json is added
+     .then(response => {
+         this.setState({ingredients : response.data})
+     })
+      .catch(err => {
+        this.setState ({error : true})
+      })
+ }
+
+ becos our ingredient is now null, we have to get it from the firebase instead
+
+ let burger = this.state.error ? <p>ingredients cant be loaded </p> : <spinner />
+ 
+ if(this.state.ingredients) {
+     burger = (
+  <Aux>
+     <Burger ingredients = {this.state.ingredients}/>
+                <Buildcontrols  
+                ingredientadded = {this.addingredienthandler}
+                ingredientRemove = {this.removeingredienthandler}
+                 disableRemove = {disableinfo}
+                 Purchaseable = {this.state.Purchaseable}
+                price = {this.state.totalprice}
+                ordered = {this.purchasehandler} />
+                </Aux>
+     )
+
+      ordersummary = <OrderSummary
+       ingredients = {this.state.ingredients}
+        purchasecancel = {this.purchasecancelhandler}
+         purchasecontinue = {this.purchaseContinuehandler}/>
+ }
+
+  if(this.state.loading) {
+             ordersummary = <Spinner/>
+         }
+
+ return (
+     {burger}
+ )
+     
+     also
+
+     let ordersumary = null
+ 
+ wen we remove .json from our componentDidMount in bb.js, we dont get the error to load, it jst keep spinning,
+ and this is becos componentDidMount in bb.js fires up first before the one in our
+ withErrorhandler handler fires,(and componentDidMount fires always after all childs
+ are render according to it diagram shown in vid), for our error to fire up first, that is,
+ to fix this, we would use constructor method or componentWillMount, (according to the diagram, 
+ componentWillMount fires before childs are render)
+
+ in withErrorhandler
+
+ componentWillMount () {
+            axios.interceptors.request.use(req => {
+                this.setState({error : null});
+                return req;
+            })
+
+185 => removing old interceptor
+since our withErrorhandler can be wrap on another component,we need to 
+be able to eject it wen it is not required anymore by using componentwillunmount
+
+in withErrorhandler.js
+
+componentWillMount () {
+    this.reqInterceptor = axios.interceptors.request.use(req => {
+        this.setState({error : error})
+    })
+
+    this.resInterceptor = axios.interceptors.response.use(res => {
+        this.setState({error : error})
+    })
+}
+
+componentwillUnmount () {
+    console.log('Will Unmount', this.reqInterceptor, this.resInterceptor)
+    axios.interceptors.request.eject(this.reqInterceptor);
+    axios.interceptors.response.eject(this.resInterceptor);
+}
+
+to see if this works
+
+in app.js
+
+class App extends Component {
+    state = {
+        show : true
+    }
+}
+
+componentDidMount () {
+    setTimeout(() => {
+    this.setState({show : false})
+    }, 5000)
+}
+
+<layout>
+{this.state.show ? <BurgerBuider /> : null}
+</layout>
+
+221 => buiding the checkout container
+
+      container F - checkout F - checkout.js
+
+      import React, {Component} from 'react';
+
+     import CheckoutSummary from '../../checkoutSummary';
+
+      class Checkout extends Component {
+        state = {
+          ingredients : {
+      salad : 1,
+      meat : 1,
+      cheese : 1,
+      bacon : 1
+          }
+        }
+      render () {
+        return (
+          <div>
+          <CheckoutSummary ingredients = {this.state.ingredients}/>
+          </div>
+        )
+      }
+      }
+ 
+ export default Checkout;
+
+ component F - Order F - checkoutSummary F - checkoutSummary.js, checkoutSummary.css
+
+checkoutSummary.js
+
+import React from 'React';
+
+
+import Burger from './../burger';
+import Button from './/../';
+import classes from './checkoutSummary.css'
+
+const checkoutSummary = (props) => {
+   return (
+     <div className = {classes.CheckoutSummary}>
+     <h1>we hope it tastes well!</h1>
+     <div style = {{width : '100%', margin : 'auto'}}>
+     <Burger ingredients = {props.ingredients}/>
+     </div>
+     <button btnType = 'Danger' clicked>CANCEL</Button>
+     <button btnType = 'Success'clicked>Continue</Button>
+     </div>
+   )
+}
+
+export default checkoutSummary;
+
+CheckoutSummary.css
+.CheckoutSummary {
+  text-align : center;
+  width : 80%;
+  margin : auto;
+}
+
+@media (min-width : 600px) {
+  .CheckoutSummary {
+    width : 500px
+  }
+}
+
+app.js
+
+import checkout from ././//     jst want to see how it looks  
+
+<Layout>
+<BurgerBuilder />
+<Checkout/>
+</Layout>
+
+222 => setting up routing n routes
+
+nom install --save react-router-dom
+
+index.js,app.js
+
+in th index.js file
+
+import { BrowserRouter } from 'react-router-dom';
+
+const app = (
+    <BrowserRouter>
+<App/>
+</BrowserRouter>
+)
+
+ReactDOM.render(app, document.getElementById('root'));
+
+this is routing enabled
+
+app.js
+
+import {Route, Switch} from 'react-router-dom';
+
+ <Layout>
+     <Burgerbuilder/>  
+     <Checkout/>
+</Layout>
+     //instead of hardcoding burgerbuider n checkout
+
+     <Layout>
+     <Switch>
+     <Route path='/' component = {BurgerBuider}/>
+     <Route path='/Checkout' component = {Checkout}/>
+     </Switch>
+     </Layout>
+
+     route ordering might matter here, or we cud jst use exact
+
+ <Route path='/' exact component = {BurgerBuider}/>
+     <Route path='/Checkout' component = {Checkout}/>
+
+
+
+     so now we see the burgerbuider only
+
+     223=> navigating to the Checkout page
+   bb.js, burger.js
+     IN bb.js we comment out the purchasecontinuehandler, and since we have access to
+     the console.log(match.params) in the componentDidMount
+
+     now we want to get the props in the burger.js, but we dont have access to it
+     it history.params, to this manually, there is a method
+
+     in burger.js
+     import {withRouter} from 'react-router-dom';
+
+     const burger = (props) => {
+         console.log(props)
+         let trasnformingre
+     }
+     export default withRouter(burger)
+
+     wen we do this we now see that we have access to the history.match
+
+     but back to our original task,
+     in the bb.js
+
+     purchasecontinuehandler = () ={
+         this.props.history.push('/checkout')
+     }
+
+     so now wen we click coutinue after ordering, it goes to
+     the checkout page. it workks, but we get an error though,becos
+     the click listener is not hooked up yet
+
+
+224 => navigating back to the next page
+checkoutSummary.js, checkout.js
+in the checkoutSummary.js
+
+<Button btnType = 'Danger'
+ clicked = {props.checkoutcancelled}>Cancel</Button>
+ <Button btnType = 'Success'
+  clicked = {props.checkoutcontinued}>Continue</Button>
+
+
+    in checkout.js  
+
+    checkoutcancelled = () => {
+      this.props.history.goBack();
+    }
+
+
+   checkoutcontinued = () => {
+    this.props.history.replace('/checkout/contact-data');
+    }
+
+      <div>
+     <CheckoutSummary ingredients = {this.state.ingredients}
+                      checkoutcancelled = {this.checkoutcancelled}
+                      checkoutcontinued = {this.checkoutcontinued}  /> 
+            </div>
+
+
+225 => passing ingre via query params
+bb.js
+
+in bb.js
+
+purchasecontinuehandler = () => {
+
+    we remove the old code
+
+     this.props.history.push('/Checkout')
+
+     and add this new one
+
+const queryParams = [];
+for (let i in this.state.ingredients) {
+queryParams.push(encodeURIComponent(i) + '=' +
+   encodeURIComponent(this.state.ingredients[i])); 
+   //encodeURIComponent simply encode element such that they can be use 
+   //in the URL
+   //and what we have up is property name = property value
+
+}
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+        pathname : '/checkout',
+        search : '?' + queryString
+    })
+}
+
+   since we want to be able to pass data via params
+    in checkout.js
+     
+     componentDidMount() {
+         const query = new URLSearchParams(this.props.location.search);
+         const ingredients = {};
+         for(let param of query.entries()) {
+             ingredients[param[0]] = +param[1];
+         }
+         this.setState({ingredients : ingredients})
+     }
+
+
+226 => navigating to the contact data component
+
+Contactdata F - contactdata.js, contactdata.css , Checkout.js
+
+import Button  from /
+import classes from 
+
+class Contactdata extends Component {
+    state = {
+        name : '',
+        email : '',
+        address : {
+            street : '',
+            postalCode: ''
+        }
+    }
+}
+
+render () {
+    return (
+
+        <div className = {classes.Contactdata}>
+        <h4>enter your contact data</h4>
+        <form>
+        <input className = {classes.Input}type = 'text' name = 'name' placeholder = 'your name'/>
+        <input className = {classes.Input}type = 'email' name = 'email' placeholder = 'your email'/>
+        <input className = {classes.Input}type = 'text' name = 'street' placeholder = 'address'/>
+        <input className = {classes.Input}type = 'text' name ='postal code' placeholder = 'postal code'/>
+        <Button btnType = 'Success'>ORDER</Button>
+        </form>
+        </div>
+    )
+
+
+}
+
+contactdata.css
+
+.Contactdata {
+    margin : 20px auto;
+    width : 80%;
+    text-align : center;
+    box-shadow : 0 2px, 3px #ccc;
+    border : 1px solid #eee;
+    padding : 10px;
+    box-sizing : border-box;
+
+}
+
+.Input {
+    display : block
+}
+ 
+@media (min-width : 600px) {
+    .Contactdata {
+        width : 500px;
+    }
+}
+
+ in Checkout.js
+
+ import {Route } from 'react-router-dom'
+ import contactdata from 
+
+
+ <div>
+   <CheckoutSummary ingredients = {this.state.ingredients}
+                 checkoutcancelled = {this.checkoutcancelled}
+                 checkoutcontinued = {this.checkoutcontinued}
+                 <Route path = {this.props.match.path + '/contact-data'} component = {ContactData}/> 
+            </div>
+
+
+
+227 =>order submission n passin data between pages
+contactdata.js,checkout.js
+
+in contactdata.js
+
+orderhandler = (event) ={
+    event.preventDefault();
+    console.log(this.props.ingredients)
+
+}
+
+
+
+<Button btnType = 'Success'clicked = {this.orderhandler}>ORDER</Button>
+
+now we want to pass the ingredient to our contactdata,
+
+in checkout.js
+
+      instead of this, 
+
+<Route path = {this.props.match.path + '/contact-data'} component = {ContactData}/> 
+   
+    we use this
+
+<Route path = {this.props.match.path + '/contact-data'} 
+   render = {() => (<ContactData ingredients = {this.state.ingredients}/>)}/> 
+
+
+
+in bb.js 
+we copy or cut the code for purchaseContinuehandler(the
+one we comment out) and then paste it in orderhandler in contactdata
+
+orderhandler = (event) ={
+    event.preventDefault();
+     //alert('you continue!');
+        // this.setState({loading : true})
+        // const order = {
+        //     ingredient : this.props.ingredients,
+        //     price : this.state.totalprice,
+        //     customer : {
+        //         name : 'jerry johnson',
+        //         address : {
+        //             street : 'teststreet 1',
+        //             zipcode : '41351',
+        //             country : 'nigeria'
+        //         },
+        //  email : 'test@gmail.com'
+        
+        //     }, 
+        //     deliverymethod : 'fatest'
+        // }
+        //     axios.post('/orders.json', order)
+        //     .then(response => 
+        //         this.setState({loading : false, purchasing : false}))
+        //     .catch(error => 
+        //         this.setState({loading : false, purchasing : false}))
+    
+    console.log(this.props.ingredients)
+
+}
+
+note : purchasing : false is not require anymore here, so delete it
+
+and then add a 
+
+  loading: false 
+
+  to contactdata state
+
+  in order to pass the totalprice to the contactdata, in
+  order to this
+
+  in bb.js
+
+   const queryParams = [];
+for (let i in this.state.ingredients) {
+queryParams.push(encodeURIComponent(i) + '=' +
+   encodeURIComponent(this.state.ingredients[i]));
+
+}
+    queryParams.push('price=' + this.state.totalprice) //code added to pass the price to contactdata
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+        pathname : '/checkout',
+        search : '?' + queryString
+    })
+}
+
+we also need to get it in the checkout component
+
+ componentDidMount() {
+        const query = new URLSearchParams(this.props.location.search);
+        const ingredients = {};
+        let price = 0; //new
+        for(let param of query.entries()) {
+            if (param[0] === 'price') { //new
+                price = params[1]; //new
+            } else {
+            ingredients[param[0]] = +param[1];
+            }
+            
+        }
+        this.setState({ingredients : ingredients, totalprice : price}) //new
+    }
+
+    still in checkout.js
+
+    state = {
+        ingredients : null,
+        price = 0
+    }
+
+    now we want to pass the price down to the contactdata,
+    jst like we pass on the ingredients
+
+    still in checkout.js
+
+    <Route path = {this.props.match.path + '/contact-data'} 
+   render = {() => (<ContactData ingredients = {this.state.ingredients} price = {this.state.totalprice}/>)}/> 
+
+
+in contactdata.js
+
+we get the price from the render here
+
+in orderhandler 
+
+price : this.props.price
+
+we also need to import axios in contactdata.js
+
+this wont work becos our ingredients is null in checkout.js
+
+to fix this we will change our componentDidMount to componentWillMount
+in checkout.js
+also so we cn redirect the user after ordering, to let the user know, 
+the order went through
+
+in contactdata.js
+
+import spinner from '../sponner'
+
+render () {
+    let form = (
+        <form>
+            <input className = {classes.Input}type = 'text' name = 'name' placeholder = 'your name'/>
+            <input className = {classes.Input}type = 'email' name = 'email' placeholder = 'your email'/>
+            <input className = {classes.Input}type = 'text' name = 'street' placeholder = 'address'/>
+            <input className = {classes.Input}type = 'text' name ='postal code' placeholder = 'postal code'/>
+            <Button btnType = 'Success'>ORDER</Button>
+            </form>);
+    if (this.state.loading) {
+        form = <Spinner/>
+    }
+}
+
+return (
+    <div className = {classes.ContactData}>
+<h4>Enter your contactdata </h4>
+{form}
+</div>
+
+once we done , we also want to redirect to the homepage
+
+in contactdata.js
+
+
+ axios.post('/orders.json', order)
+           .then(response => 
+                 this.setState({loading : false}))
+                 this.props.history.push('/'); //new  //point 1
+
+but becos of the way we rendering contactdata in our checkout.js
+we dont ave access to the history.match
+
+talking abt this
+
+ render = {() => (<ContactData ingredients = {this.state.ingredients} price = {this.state.totalprice}/>)}/>
+
+ two ways to fix this 
+
+ we can wrap the contactdata data component with withRouter,
+ the other is to pass history which we do get in the props of the render 
+method in ou render
+
+we using the second option
+
+render = {(props) => (<ContactData ingredients = {this.state.ingredients} price = {this.state.totalprice} {...props}/>)}/>
+
+since this ave the history object, the push method will work //point 2
+
+
+228 => adding a order page
+orders.js , orders.css, order.js, app.js
+
+new F - orders.js,
+
+import order from 
+
+class orders extends component {
+    render () {
+        return (
+     <div>
+     <order/>
+     <order/>
+     </div>
+        )
+    }
+}
+
+in Order F => new => order.js, order.css
+
+in order.js
+
+import classes from './order.css'
+
+const order = (props) => (
+    <div>
+    <p>ingredients : Salad (1) </p>
+    <p>Price: <strong> USD 5.45 </strong></p>
+    </div>
+
+)
+
+order.css
+
+.order {
+    width : 100%;
+    border : 1px solid #eee;
+    box-shadow : 0 2px 3px #ccc;
+    padding : 10px;
+    margin : 10px auto;
+    box sizing : border-box;
+}
+
+we cleared all the orders in firebase so we can start with a new one
+
+in the app.js
+
+import Orders from ./orders
+
+<Route path = '/' component = {Orders}/>
+
+229 => implementing the nav link
+navigationitems.js, navigationitem.js
+
+in the navigationitems.js
+
+Navigationitem link = '/'>CHECKOUT </Navigationitem>   
+
+      is now 
+
+Navigationitem link = '/Orders'>Orders </Navigationitem>
+
+in the navigationitem.js
+
+import {Navlink} from 'react-router-dom';
+
+using Navlink becos we want to style the active link and also
+want to use the default of having a css class name active becos 
+thats the css class we have define in navigationitem.css too
+i.e .Navigationitem a.active
+
+ <li className = {classes.navigationitem}>
+        <a href = {props.link}
+        className = {props.active ? classes.active : null}>{props.children}</a>
+        </li>
+);
+
+  is now
+
+   <li className = {classes.navigationitem}>
+        <Navlink to= {props.link}
+        className = {props.active ? classes.active : null}>{props.children}
+        </Navlink>
+        </li>
+);
+
+we also remove classes.active , navlink wud help detect it now AND we also
+dont nee it in nav
+
+normally navlink automatically attach a class name active,but becos of our css module,
+its not recognising the class we use in css module, instead it wud be showing
+as a  unique css , Something like hashtag in front of it, that is why our
+burgerbuider navlink is not showing as active, to fix this
+
+<li className = {classes.navigationitem}>
+        <Navlink to= {props.link}
+        activeClassName = {classes.active}>{props.children}
+        </Navlink>
+        </li>
+
+now its active but wen we click on orders , its also active , to fix this
+
+
+<li className = {classes.navigationitem}>
+        <Navlink 
+        to= {props.link}
+       // exact // only adding exacts will attach it to all navlinks
+         exact = {props.exact}
+        activeClassName = {classes.active}>{props.children}
+        </Navlink>
+        </li>
+
+
+in navigationitems.js
+<Navigationitem link = '/' exact> BURGER BUIDER </Navigationitem>
+       <Navigationitem link = '/'>CHECKOUT </Navigationitem>
+
+    now any link we click is active
+
+    230 => fetching orders
+  order.css, Orders.js
+
+in order.css
+  width : 80%;
+
+in orders.js
+
+we want to fetch all orders in this container
+
+import axios from './axios-order'
+import withErrorhandler from ../eror  =to avoid unwanted erro
+
+class Orders extends Component {
+    state = {
+        orders :[],
+        loading : true
+    }
+
+
+    componentDidMount () {
+    axios.get('./orders.json')
+    .then(res => {
+
+        //console.log(res.data); we are not getting back  object but instead Id
+       //NOW WE want to turn the object into an array
+       const fetched0rders = [];
+       for (let key in res.data) {
+         //fetched0rders.push(res.data[key]) to not lose the ids which are our keys here, we do the below instead
+         fetched0rders.push({
+             ...res.data[key],
+             id : key
+         });
+       }
+        this.setState({loading : false orders :fetched0rders})
+    })
+    .catch(err => {
+        this.setState({loading : false})
+    })
+
+    }
+    render() {
+        return (
+            <div>
+               <Order/> 
+               <Order/> 
+            </div>
+        )
+    }
+}
+
+export default withErrorhandler(Orders, axios)
+
+and with all these, fetching orders is not the same as outputting,
+outputting in the next lecture
+
+231 => outputting the orders
+
+orders.js, order.js
+
+in orders.js
+return (
+<div>
+{this.state.orders.map(order => {
+    <Order
+        key = {order.id}
+        ingredients = {order.ingredients}
+        price = {order.price}/>
+})}
+</div>
+)
+
+in order.js
+
+<p>Price : <strong>naira {Number.parseFloat(props.price).toFixed(2)}</strong></p>
+
+or we could jst add a plus sign in orders.js to do the roundoff trick
+
+price = {+order.price}/>
+
+for the ingredients in order.js, we need to turn it into an array
+
+in order.js
+
+here is an alternative for transforming object into an array compare to
+the one in burger.js
+
+const order = (props) => {
+    const ingredients = [];
+
+    for (let ingredientName in props.ingredients) {
+        ingredients.push (
+            {
+                name : ingredientName,
+                amount : props.ingredients[ingredientName]
+            }
+        );
+    }
+}
+
+const ingredientOutput = ingredients.map(ig => {
+    return <span
+    style = {{
+        textTrasnform : 'capitalize',
+        display : 'inline-block',
+        margin : '0 8px',
+        border : '1px solid #ccc',
+        padding : '5px'
+    }}   //we cud also use css class here
+     key = {ig.name}>{ig.name} ({ig.amount})
+     </span>
+})
+
+return ( 
+    <div className = {classes.Order}>
+    <p>ingredients : {ingredientOutput}</p>
+    <p>Price : <strong>naira {Number.parseFloat(props.price).toFixed(2)}
+      </strong></p>
+)
+
+236 => creating a custom dynamic component
+input.js , input.css, contactdata.js, contactdata.css
+
+UI F -> new -> input.js, input.css
+
+in input.js
+ 
+const input = (props) => {
+    let inputElement = null;
+
+    switch (props.inputType) {
+        case ('input'):
+        inputElement = <input className = {classes.inputElement} {...props} />
+        break;
+        case('textarea'):
+        inputElement = <textarea className = {classes.inputElement}{...props}/>
+        break;
+        default:
+         inputElement = <input className = {classes.inputElement}{...props} />
+    }
+
+  return (
+ <div className = {classes.Input}>
+    <label className = {classes.Label}>{props.label}</label>
+    {inputElement}
+    </div>
+  )  
+}
+
+input.css
+
+.Input {
+    width : 100%;
+    padding : 10px;
+    box-sizing : border-box;
+}
+
+.Label {
+    font-weight: bold;
+    display : block;
+    margin-bottom : 8px;
+}
+
+.InputElement {
+    outline : none;
+    border : 1px solid #ccc;
+    background-color : white;
+    font: inherit;
+    padding: 6px 10px;
+    display : block;
+    width : 100%;
+    box-sizing : border-box;
+}
+
+.inputElement:focus {
+    outline: none;
+    background-color : #ccc
+}
+
+in contactdata.js
+
+here we are replacing the input with the import and
+we also remove the className becos we ave input.css
+
+import Input from./input
+
+<input  inputType = 'input' type = 'text' name = 'name' placeholder = 'your name'/>
+ <input inputType = 'input' type = 'email' name = 'email' placeholder = 'your email'/>
+ <input inputType = 'input' type = 'text' name = 'street' placeholder = 'address'/>
+ <input inputType = 'input' type = 'text' name ='postal code' placeholder = 'postal code'/>
+   
+in contactdata.css
+
+we remove
+
+.Input {
+    display: block;
+}
+
+237 => setting up a js config for the form\
+
+contactdata.js, input.js
+
+in contactdata.js 
+
+state = {
+    orderForm : {
+        name : {
+            elementType : 'input',
+            elementConfig : {
+                type : 'text',
+                placeholder : 'your name'
+            },
+            value: ''
+        },
+        street: {
+            elementType : 'input',
+            elementConfig : {
+                type : 'text',
+                placeholder : 'street'
+            },
+            value: ''
+        },
+        zipcode: {
+            elementType : 'input',
+            elementConfig : {
+                type : 'text',
+                placeholder : 'ZIP code'
+            },
+            value: ''
+    },
+    country: {
+            elementType : 'input',
+            elementConfig : {
+                type : 'text',
+                placeholder : 'country'  //CAN USE third party for country
+            },
+            value: ''
+    },
+    email: {
+            elementType : 'input',
+            elementConfig : {
+                type : 'email',
+                placeholder : 'email'
+            },
+            value: ''
+    },
+    deliverymethod: {
+            elementType : 'select',
+            elementConfig : {
+                options : [
+                {value : 'fatest', displayvalue : '10%-payment'}
+                {value : 'slow', displayvalue : 'normal'}
+                ]
+            },
+            value: ''
+}
+
+
+let form = (
+    <form>
+      <Input elementType = '...' elementConfig= '...' value = '...'/>
+    </form>
+)
+
+in input.js
+let inputElement = null
+switch (props.elementType) {
+        case ('input'):
+        inputElement = <input 
+        className = {classes.InputElement}
+         {...props.elementConfig} 
+         value = {props.value}/>
+        break;
+        case('textarea'):
+        inputElement = <textarea 
+        className = {classes.InputElement}
+        {...props.elementConfig}
+        value = {props.value}/>
+        break;
+        default:
+         inputElement = <input
+          className = {classes.InputElement}
+          {...props.elementConfig}
+          value = {props.value}
+           />
+    }
+
+    238 => dynamically create inputs based on JS config
+
+    contactdata.js
+
+    in contactdata.js
+
+    render () {
+        const formElementArrays = [];
+        for(let key in this.state.orderForm) {
+            formElementArrays.push({
+                id : key,
+                config : this.state.orderForm[key]
+            })
+        }
+    }
+
+let form = (
+    <form>
+    // <Input elementType = '...' elementConfig= '...' value = '...'/>
+    {formElementArrays.map(formElement => (
+        <Input
+        //key= {formElement.id}
+          elementType = {formElement.config.elementType}
+          elementConfig= {formElement.config.elementConfig}
+          value={formElement.config.value} />
+    ))}
+)
+
+239 => adding a dropdown component
+
+input.js
+
+adding another case for input select
+
+this is for the input select in contactdata
+
+case ('select'):
+inputElement = (
+    <select 
+        className = {classes.InputElement}
+        value={props.value}>
+        {props.elementConfig.options.map(option => (
+            <option key = {option.value} value = {option.value}>
+            {option.displayvalue}
+            </option>
+        ))}
+    </select>
+)
+
+240 => handling user input
+input.js, contactdata.js
+
+in input.js, we add 
+
+value= {props.value}
+onChange = {props.changed} //new
+
+in contactdata.js
+
+inputchangehandler = (event) => {
+    console.log(event.target.value);
+}
+
+in our form
+
+value = {formElement.config.value}
+changed = {this.inputchangehandler}/> //new
+
+we also want to get the right element in our state so we can
+adjust the value, to that , we use the inputIdentifier
+
+inputchangehandler = (event, inputIdentifier) => {
+    console.log(event.target.value);
+}
+
+we want to pass arguement to the changed = {this.inputchangehandler}
+
+changed = {(event) => this.inputchangehandler(event, formElement.id)}/> //new
+
+when we clone our state with the spread operator in the code below, it is 
+done deeply, it only grabs the pointer, although it would still be equal,
+
+ const updatedOrderForm = {
+        ...this.state.orderForm
+    };
+
+but we still achieve cloning it deeply when we use 'const updatedFormElement'
+although we didnt get elementConfig, if we need to do it , we might have to
+do that deeply using the spread operator too
+
+
+inputchangehandler = (event, inputIdentifier) => {
+    const updatedOrderForm = {
+        ...this.state.orderForm
+    };
+    const updatedFormElement = {
+        ...updatedOrderForm[inputIdentifier]
+    };
+    updatedFormElement.value = event.target.value;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+    this.setState({orderForm : updatedOrderForm});
+}
+
+241 => handling form submission
+contactdata.js
+we wont be using this (deleted)
+
+<Button btnType = 'Success'clicked = {this.orderhandler}>ORDER</Button>
+
+instead we would use 
+
+<form onSubmit = {this.orderhandler}>
+
+
+in the order handler
+
+ orderhandler = (event) => {
+        event.preventDefault();
+        alert('you continue!');
+        this.setState({loading : true})
+new//   const formData = {};
+for(let formElementIdentifier in this.state.orderForm) {
+    formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+    //here we are simply turning the value to what the user enters
+}
+ const order = {
+            ingredients : this.props.ingredients,
+            price : this.props.price,
+    //new   orderData : formData
+
+
+242 => adding custom form validation
+contactdata.js
+
+we add validation : {
+    required : true
+},
+valid: false
+
+    for all our orderForm, i.e
+
+    zipcode : {
+                elementType : 'input',
+                elementConfig : {
+                    type : 'text',
+                    placeholder : 'ZIP code'
+                },
+                value: '',
+          //new validation : {
+                    required : true,
+                    minLength : 5,
+                    maxLength : 5,
+
+                },
+            valid : false
+
+
+    checkValidity(value, rules) {
+        let isValid = false;
+
+        if(rules.required) {
+            isValid = value.trim() !== ""; //so if it is not equal to empty string,isVaid will be true,trim removes any whitespace at the begining and end
+        }
+
+   // if(rules.minLength) {
+        isValid = value.length >= rules.minLength 
+    }
+
+    // if(rules.maxLength) {
+        isValid = value.length <= rules.maxLength
+    }
+    //fixing this in next lecture
+
+        return isValid;
+    }
+
+
+in our inputchangehandler
+
+       updatedFormElement.value = event.target.value;
+//new  updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation )
+      updatedOrderForm[inputIdentifier] = updatedFormElement;
+//new      console.log(updatedFormElement) //to see whether it works
+      this.setState({orderForm : updatedOrderForm});
+
+
+
+243 => fixing common validation 
+contactdata.js
+
+to fix this, we can set 
+
+let isValid = true;
+
+ if(rules.required) {
+            isValid = value.trim() !== "" && isValid
+        }
+
+     if(rules.minLength) {
+        isValid = value.length >= rules.minLength && isValid
+    }
+
+    if(rules.maxLength) {
+        isValid = value.length <= rules.maxLength && isValid
+    }
+
+    this now fix all the issues ,if more than 5, valid is false,
+    if less than 5 , valid is false, if empty, valid is false, if
+    it is 5 , valid is true
+
+    244 => adding a validation feedback
+    input.js, input.css, contactdata.js
+
+    const inputClasses = [classes.InputElement];
+
+    if(props.invalid) {
+        inputClasses.push(classes.invalid)
+    }
+
+    and then we change
+
+     className = {classes.InputElement}
+
+     to 
+     className = {inputClasses.join(' ')}
+
+
+     input.css
+
+     .Invalid {
+         border : 1px solid red;
+         background-color : black;
+     }
+
+     in contactdata.js
+      invalid = {!formElement.config.valid} //new
+     change = {(event) => this.inputchangehandler (event, formElement.id)}/>))}
+
+     so that all our forms wont jst be showing red wen we
+     start filling the ,and so taht our deliverymethod wont
+     validate at all becos its an option
+     
+
+     in input.js
+
+      if(props.invalid && props.shouldValidate) {
+        inputClasses.push(classes.invalid)
+    }
+
+    in contactdata.js
+     invalid = {!formElement.config.valid} 
+     shouldValidate = {formElement.config.validation}//new
+     change = {(event) => this.inputchangehandler (event, formElement.id)}/>))}
+
+will be handling the red issue in the next lecture
+
+245 => improving visual feedback
+
+we have to track whether a user have touch any of the input
+contactdata.js
+we will set 
+
+touched : false
+
+in all our orderForm
+
+i.e
+
+email: {
+            elementType : 'input',
+            elementConfig : {
+                type : 'email',
+                placeholder : 'email'
+            },
+            value: '',
+            validation : {
+                required : true
+            },
+            valid : false,
+            touched : false
+
+
+in contactdata.js
+
+in our inputchangehandler
+
+we add this
+
+updatedFormElement.touched = true;
+
+in our form
+
+we add 
+
+touched = {formElement.config.touched}
+
+in input.js
+
+we add to our code
+
+if(props.invalid && props.shouldValidate && props.touched) {
+        inputClasses.push(classes.invalid)
+    }
+
+
+246 => showing error (when a user dont enter valid info) - no video
+
+in input.js
+
+we add this to our code
+
+let validationError = null;
+
+if (props.invalid && props.touched) {
+        validationError = <p>Please enter a valid value!</p>;
+    }
+
+
+return (
+    {validationError}
+)
+
+
+247 => handling overall form validity(disabling the order button if invalid)
+
+contactdata.js, button.js, button.css
+
+in contactdata.js
+
+after the orderForm
+
+},
+  loading : false,
+  Valido : false
+
+
+  in inputchangehandler we add a new const
+
+   let formisvalid = true;
+   for(let inputIdentifier in updatedOrderForm) {
+       formisvalid = updatedOrderForm[inputIdentifier].valid && formisvalid
+   }
+   this.setState({orderForm : updatedOrderForm, Valido : formisvalid});
+
+    <Button btnType = 'Success'
+              disabled = {!this.state.Valido}
+                >ORDER</Button> 
+
+
+in button.js
+
+<button>
+disabled = {props.disabled}
+
+we need to set our dileverymethod valid : true
+becos it is undefined now
+
+in button.css
+
+.Button:disabled {
+    color : #ccc;
+    cursor : not-allowed;
+}
+
+248 => working on an error
+ contactdata
+
+ the problem here is that we pass updatedFormElement.value and
+ updatedFormElement.validation, but this things dont exist
+ for deliverymethod
+
+ two ways for fixing this,
+
+ we can add empty validation to deliverymethod i.eject
+
+ value : '',
+ validation : {} //new
+
+ and also add this to our checkValidity
+
+ checkValidity(value, rules) {
+        let isValid = true;
+        if (!rules) {  //new
+            return true;
+        }
+
+
+249=> fixing bugs
+
+will fix the deliverymethod later in the course
+
+
+    

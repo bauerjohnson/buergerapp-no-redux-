@@ -1,0 +1,54 @@
+125 => creating a layout function
+        we create the layout folder, hoc(aux) ,bb.js
+
+127  =>  in burger folder, we create burgeringre.js n css
+
+128 => we add props validation to burgeringre
+
+129 => the burger component , in the burger.js we import burgeringre and do the burger.css too 
+        then pass it to bb.js to show
+
+130 => we pass state to state(object) to burger to js , then we transform it into an array
+
+131 => we flatten our transformingre using reduce and change all state to zero
+       so we can use "pls start adding ingredient
+
+132 n 133=> the buildcontol n buildcontols 
+
+134 => add and remove ingredient handler
+
+135 => removing ingredient and disabling the less button
+
+136 => adding the price to buildcontrol
+
+137 => adding the order button and activating it
+
+138 => the ordersummary modal
+
+139 => showing and hiding the modal
+
+140 => backdrop component
+
+141 => button component
+
+142 => implememnting the button component
+
+143 => ordersummary
+
+144 => adding toolbar
+
+145 => logo in app
+
+146 => reusable nav items
+
+147 => responsive sidedrawer
+
+155 => using life cycle
+
+156 => changing folder structure
+
+159 => module introduction
+
+160 =>understanding http request in react
+
+
